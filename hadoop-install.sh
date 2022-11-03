@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 #写入hosts路由配置
 tee /etc/hosts <<-'EOF'
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
