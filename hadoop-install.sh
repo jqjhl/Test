@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 #写入hosts路由配置
 tee /etc/hosts <<-'EOF'
@@ -26,10 +26,10 @@ ssh-copy-id -i ~/.ssh/id_rsa.pub root@slave1
 ssh-copy-id -i ~/.ssh/id_rsa.pub root@slave2
 
 #配置普通用户免密
-su 27liusaiqi -c "ssh-keygen -t rsa"
-su 27liusaiqi -c "ssh-copy-id -i ~/.ssh/id_rsa.pub 27liusaiqi@master"
-su 27liusaiqi -c "ssh-copy-id -i ~/.ssh/id_rsa.pub 27liusaiqi@slave1"
-su 27liusaiqi -c "ssh-copy-id -i ~/.ssh/id_rsa.pub 27liusaiqi@slave2"
+sudo -u 27liusaiqi ssh-keygen -t rsa
+sudo -u 27liusaiqi ssh-copy-id -i /home/27liusaiqi/.ssh/id_rsa.pub 27liusaiqi@master
+sudo -u 27liusaiqi ssh-copy-id -i /home/27liusaiqi/.ssh/id_rsa.pub 27liusaiqi@slave1
+sudo -u 27liusaiqi ssh-copy-id -i /home/27liusaiqi/.ssh/id_rsa.pub 27liusaiqi@slave2
 
 #关闭防火墙
 systemctl stop firewalld.service
@@ -428,3 +428,35 @@ scp /home/27liusaiqi/.bash_profile root@slave2:/home/27liusaiqi/.bash_profile
 chown -R 27liusaiqi /opt/software
 ssh slave1 "chown -R 27liusaiqi /opt/software"
 ssh slave2 "chown -R 27liusaiqi /opt/software"
+
+# #修改主机名
+# hostnamectl set-hostname master
+
+# #写入ifcfg-ens33网卡配置
+# tee /etc/sysconfig/network-scripts/ifcfg-ens33 <<-'EOF'
+# TYPE="Ethernet"
+# PROXY_METHOD="none"
+# BROWSER_ONLY="no"
+# BOOTPROTO="static"
+# DEFROUTE="yes"
+# IPV4_FAILURE_FATAL="no"
+# IPV6INIT="yes"
+# IPV6_AUTOCONF="yes"
+# IPV6_DEFROUTE="yes"
+# IPV6_FAILURE_FATAL="no"
+# IPV6_ADDR_GEN_MODE="stable-privacy"
+# NAME="ens33"
+# UUID="f7f94a83-190c-4f57-b902-5a640d0c5fc1"
+# DEVICE="ens33"
+# ONBOOT="yes"
+# IPADDR="192.168.100.100"
+# NETMASK="255.255.255.0"
+# GATEWAY="192.168.100.2"
+# DNS1="114.114.114.114"
+# EOF
+
+# #格式化hadoop
+# su 27liusaiqi -c "hdfs namenode -format"
+
+# #启动hadoop
+# su 27liusaiqi -c "start-all.sh"
