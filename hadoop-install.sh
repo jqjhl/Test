@@ -1,4 +1,4 @@
-#!/bin/bash
+
 
 #写入hosts路由配置
 tee /etc/hosts <<-'EOF'
